@@ -8,7 +8,27 @@ hands = mpHands.Hands(max_num_hands=1)
 
 cap = cv2.VideoCapture(0)
 
+# -------- INPUT --------
 gesture_name = input("Enter gesture name: ")
+
+print("\nSelect Action:")
+print("1 → Brightness Low")
+print("2 → Brightness High")
+print("3 → Volume Up")
+print("4 → Volume Down")
+
+choice = input("Enter choice: ")
+
+action_map = {
+    "1": "brightness_low",
+    "2": "brightness_high",
+    "3": "volume_up",
+    "4": "volume_down"
+}
+
+action = action_map.get(choice, "none")
+
+print(f"\nRecording Gesture: {gesture_name} → Action: {action}")
 
 with open("gestures.csv", "a", newline="") as f:
     writer = csv.writer(f)
@@ -23,7 +43,6 @@ with open("gestures.csv", "a", newline="") as f:
         if results.multi_hand_landmarks:
             for hand in results.multi_hand_landmarks:
 
-                # -------- NORMALIZATION --------
                 x0, y0 = hand.landmark[0].x, hand.landmark[0].y
 
                 row = []
@@ -31,7 +50,6 @@ with open("gestures.csv", "a", newline="") as f:
                     row.append(lm.x - x0)
                     row.append(lm.y - y0)
 
-                # -------- DISTANCE FEATURE --------
                 d1 = hypot(
                     hand.landmark[4].x - hand.landmark[8].x,
                     hand.landmark[4].y - hand.landmark[8].y
@@ -39,14 +57,16 @@ with open("gestures.csv", "a", newline="") as f:
 
                 row.append(d1)
 
-                # -------- SCALE NORMALIZATION --------
-                max_val = max([abs(i) for i in row]) if max(row) != 0 else 1
+                max_val = max([abs(i) for i in row]) or 1
                 row = [i / max_val for i in row]
 
+                # 🔥 IMPORTANT: save action also
                 row.append(gesture_name)
+                row.append(action)
+
                 writer.writerow(row)
 
-        cv2.putText(frame, f"Collecting: {gesture_name}", (10, 40),
+        cv2.putText(frame, f"{gesture_name} → {action}", (10, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
 
         cv2.imshow("Data Collection", frame)
