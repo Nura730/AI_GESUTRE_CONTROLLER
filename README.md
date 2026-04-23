@@ -236,6 +236,6 @@ TEST_SPLIT = 0.2               # 20% data for testing
 
 ## 👨‍💻 Author
 
-**Arun S** — AIML Department
+**Arun S** — CSE Department
 
 *Real-Time Hand Gesture Recognition System for Device Control using Deep Learning*
