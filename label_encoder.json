@@ -1,0 +1,14 @@
+{
+  "classes": [
+    "Fist",
+    "Open",
+    "Peace",
+    "Point"
+  ],
+  "class_to_index": {
+    "Fist": 0,
+    "Open": 1,
+    "Peace": 2,
+    "Point": 3
+  }
+}
